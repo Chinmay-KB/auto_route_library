@@ -14,6 +14,11 @@ typedef BottomNavigationBuilder = Widget Function(
   TabsRouter tabsRouter,
 );
 
+typedef NavigationRailBuilder = Widget Function(
+  BuildContext context,
+  TabsRouter tabsRouter,
+);
+
 class AutoTabsScaffold extends StatelessWidget {
   final AnimatedIndexedStackBuilder? builder;
   final List<PageRouteInfo> routes;
@@ -21,6 +26,9 @@ class AutoTabsScaffold extends StatelessWidget {
   final Curve animationCurve;
   final bool lazyLoad;
   final BottomNavigationBuilder? bottomNavigationBuilder;
+  final NavigationRailBuilder? navigationRailBuilder;
+  final int navigationRailFlex;
+  final int navigationRailChildFlex;
   final NavigatorObserversBuilder navigatorObservers;
   final bool inheritNavigatorObservers;
   final Widget? floatingActionButton;
@@ -54,6 +62,9 @@ class AutoTabsScaffold extends StatelessWidget {
     this.animationDuration = const Duration(milliseconds: 300),
     this.animationCurve = Curves.ease,
     this.builder,
+    this.navigationRailBuilder,
+    this.navigationRailFlex = 1,
+    this.navigationRailChildFlex = 4,
     this.bottomNavigationBuilder,
     this.inheritNavigatorObservers = true,
     this.navigatorObservers =
@@ -122,13 +133,22 @@ class AutoTabsScaffold extends StatelessWidget {
                   context,
                   tabsRouter,
                 ),
-          body: builder == null
-              ? FadeTransition(opacity: animation, child: child)
-              : builder!(
-                  context,
-                  child,
-                  animation,
-                ),
+          body: navigationRailBuilder != null
+              ? Row(
+                  children: [
+                    Expanded(
+                        flex: navigationRailFlex,
+                        child: navigationRailBuilder!(context, tabsRouter)),
+                    Expanded(flex: navigationRailChildFlex, child: child)
+                  ],
+                )
+              : builder == null
+                  ? FadeTransition(opacity: animation, child: child)
+                  : builder!(
+                      context,
+                      child,
+                      animation,
+                    ),
           bottomNavigationBar: bottomNavigationBuilder == null
               ? null
               : bottomNavigationBuilder!(
