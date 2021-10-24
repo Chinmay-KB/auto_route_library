@@ -15,11 +15,10 @@ dependencies:
   code_builder: ^4.1.0
   dart_style: ^2.2.0
   auto_route:
+    path: ../auto_route
 #  ^3.0.1
-    git:
-      url: git://github.com/Chinmay-KB/auto_route_library.git
-      path: auto_route
-      ref: e01691ca2cf055f88307c9d14538d8a4f31d0f0a
+
+
 
 
 dev_dependencies:
